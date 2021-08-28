@@ -29,7 +29,6 @@ resource "aws_subnet" "primary-subnet" {
         Name = var.primary-subnet
     }
 }
-
 resource "aws_subnet" "second-subnet" {
     vpc_id             = "${aws_vpc.main.id}"
     cidr_block         = var.cidr_block_subnet2
@@ -39,14 +38,11 @@ resource "aws_subnet" "second-subnet" {
         Name = var.second-subnet
     }
 }
-
-/*
 resource "aws_route_table_association" "Public_route1" {
-    subnet_id = "${aws_subnet.Pub_Network-PROD.id}"
-    route_table_id = "${aws_route_table.Internet_Gateway.id}"
+    subnet_id      = "${aws_subnet.primary-subnet.id}"
+    route_table_id = "${aws_route_table.IG_route_table.id}"
 }
 resource "aws_route_table_association" "Public_route2" {
-    subnet_id = "${aws_subnet.Pub_Network-BACK.id}"
-    route_table_id = "${aws_route_table.Internet_Gateway.id}"
+    subnet_id      = "${aws_subnet.second-subnet.id}"
+    route_table_id = "${aws_route_table.IG_route_table.id}"
 }
-*/
