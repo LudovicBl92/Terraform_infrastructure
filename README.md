@@ -29,3 +29,16 @@ module "SECURITY_GROUP_module" {
     second-subnet      = "${module.VPC_module.secondary-subnet_id}"
     cidr_block_subnet1 = "${module.VPC_module.cidr_block_subnet1}"
 }
+
+module "EC2_module" {
+    source             = "./modules/EC2"
+    template_name      = "YOUR TEMPLATE NAME"
+    id_image           = "AMI ID"
+    type_instance      = "INSTANCE TYPE"
+    key                = "YOUR KEY"
+    version_template   = "1.0"
+    first_sg_id        = "${module.SECURITY_GROUP_module.first_sg_id}"
+    primary-subnet     = "${module.VPC_module.primary-subnet_id}"
+    ec2_name1          = "FIRST EC2 NAME"
+    ec2_name2          = "SECOND EC2 NAME"
+}
