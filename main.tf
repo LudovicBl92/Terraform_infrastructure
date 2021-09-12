@@ -20,3 +20,30 @@ module "SECURITY_GROUP_module" {
     second-subnet      = "${module.VPC_module.secondary-subnet_id}"
     cidr_block_subnet1 = "${module.VPC_module.cidr_block_subnet1}"
 }
+
+module "EC2_module" {
+    source             = "./modules/EC2"
+    template_name      = "web_template"
+    id_image           = "ami-0f7cd40eac2214b37"
+    type_instance      = "t2.micro"
+    key                = "AWS"
+    version_template   = "1.0"
+    first_sg_id        = "${module.SECURITY_GROUP_module.first_sg_id}"
+    primary-subnet     = "${module.VPC_module.primary-subnet_id}"
+    ec2_name1          = "EC2_web1"
+    ec2_name2          = "EC2_web2"
+}
+
+module "ALB_module" {
+    source            = "./modules/ALB"
+    target_group_name = "tg-front-end"
+    port_define       = "80"
+    protocol_define   = "HTTP"
+    id_vpc            = "${module.VPC_module.VPC_ID}"
+    lb_name           = "Loadbalancer-Web"
+    first_sg_id       = "${module.SECURITY_GROUP_module.first_sg_id}"
+    primary-subnet    = "${module.VPC_module.primary-subnet_id}"
+    second-subnet     = "${module.VPC_module.secondary-subnet_id}"
+    ec2_id1           = "${module.EC2_module.ec2_id1}"
+    ec2_id2           = "${module.EC2_module.ec2_id2}"
+}
