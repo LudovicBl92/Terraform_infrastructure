@@ -15,6 +15,11 @@ This module provision aws template and 2 ec2.
 # AWS ALB creation
 
 This module provision AWS loadbalancer.
+
+# AUTOSCALING creation
+
+This module provision aws autoscalingroup and associated policy.
+
 ## Usage
 
 ```hcl
@@ -35,10 +40,10 @@ module "SECURITY_GROUP_module" {
     source             = "./modules/Security"
     first_sg           = "FIRST SECURITY GROUP NAME"
     second_sg          = "SECOND SECURITY GROUP NAME" 
-    id_vpc             = "${module.VPC_module.VPC_ID}"
-    primary-subnet     = "${module.VPC_module.primary-subnet_id}"
-    second-subnet      = "${module.VPC_module.secondary-subnet_id}"
-    cidr_block_subnet1 = "${module.VPC_module.cidr_block_subnet1}"
+    id_vpc             = module.VPC_module.VPC_ID
+    primary-subnet     = module.VPC_module.primary-subnet_id
+    second-subnet      = module.VPC_module.secondary-subnet_id
+    cidr_block_subnet1 = module.VPC_module.cidr_block_subnet1
 }
 
 module "EC2_module" {
@@ -48,8 +53,8 @@ module "EC2_module" {
     type_instance      = "INSTANCE TYPE"
     key                = "YOUR KEY"
     version_template   = "1.0"
-    first_sg_id        = "${module.SECURITY_GROUP_module.first_sg_id}"
-    primary-subnet     = "${module.VPC_module.primary-subnet_id}"
+    first_sg_id        = module.SECURITY_GROUP_module.first_sg_id
+    primary-subnet     = module.VPC_module.primary-subnet_id
     ec2_name1          = "FIRST EC2 NAME"
     ec2_name2          = "SECOND EC2 NAME"
 }
@@ -59,11 +64,27 @@ module "ALB_module" {
     target_group_name = "TARGET GROUP NAME"
     port_define       = "80 BY DEFAULT"
     protocol_define   = "HTTP BY DEFAULT"
-    id_vpc            = "${module.VPC_module.VPC_ID}"
+    id_vpc            = module.VPC_module.VPC_ID
     lb_name           = "LOAD-BALANCER NAME"
-    first_sg_id       = "${module.SECURITY_GROUP_module.first_sg_id}"
-    primary-subnet    = "${module.VPC_module.primary-subnet_id}"
-    second-subnet     = "${module.VPC_module.secondary-subnet_id}"
-    ec2_id1           = "${module.EC2_module.ec2_id1}"
-    ec2_id2           = "${module.EC2_module.ec2_id2}"
+    first_sg_id       = module.SECURITY_GROUP_module.first_sg_id
+    primary-subnet    = module.VPC_module.primary-subnet_id
+    second-subnet     = module.VPC_module.secondary-subnet_id
+    ec2_id1           = module.EC2_module.ec2_id1
+    ec2_id2           = module.EC2_module.ec2_id2
+}
+
+module "AUTOSCALING_module" {
+  source                  = "./modules/AUTOSCALING"
+  template_name           = module.EC2_module.template_name
+  template_id             = module.EC2_module.template_id
+  minimum_size            = "MINIMUM SIZE WANTED"
+  wanted_capacity         = "DESIRED CAPACITY"
+  maximum_size            = "MAXIMUM SIZE"
+  healthcheck_period      = "HEALTH CHECK PERIOD"
+  lb_arn                  = module.ALB_module.lb_arn
+  second-subnet           = module.VPC_module.secondary-subnet_id
+  version_template        = "TEAMPLTE VERSION WANTED"
+  tag_name                = "TAG NAME OF THE AUTOSCALING GROUP"
+  autoscaling_policy_name = "NAME OF THE AUTOSCALING POLICY "
+  value_target            = "DESIRED VALUE TRIGGER"
 }
