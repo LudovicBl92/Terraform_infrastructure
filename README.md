@@ -20,6 +20,10 @@ This module provision AWS loadbalancer.
 
 This module provision aws autoscalingroup and associated policy.
 
+# RDS creation
+
+This module provision aws RDS database.
+
 ## Usage
 
 ```hcl
