@@ -9,6 +9,15 @@ module "VPC_module" {
   second-subnet      = "subnet-BACK"
   cidr_block_subnet2 = "10.0.2.0/24"
   AZ-2               = "eu-west-3b"
+  third-subnet       = "subnet-PRIV"
+  cidr_block_subnet3 = "10.0.3.0/24"
+  fourth-subnet      = "subnet-PRIV2"
+  cidr_block_subnet4 = "10.0.4.0/24"
+  AZ-3               = "eu-west-3c"
+  nat_eip            = "NAT_EIP"
+  nat_gateway        = "NAT_GW"
+  nat_eip_back       = "NAT_EIP2"
+  nat_gateway_back   = "NAT_GW2"
 }
 
 module "SECURITY_GROUP_module" {
@@ -19,6 +28,7 @@ module "SECURITY_GROUP_module" {
   primary-subnet     = module.VPC_module.primary-subnet_id
   second-subnet      = module.VPC_module.secondary-subnet_id
   cidr_block_subnet1 = module.VPC_module.cidr_block_subnet1
+  cidr_block_subnet2 = module.VPC_module.cidr_block_subnet2
 }
 
 module "EC2_module" {
@@ -61,5 +71,22 @@ module "AUTOSCALING_module" {
   version_template        = "$Latest"
   tag_name                = "instance_ASG"
   autoscaling_policy_name = "Autoscaling-Policy"
-  value_target            = 25
+  value_target            = 75
+}
+
+module "RDS_module" {
+  source                = "./modules/RDS"
+  db_subnet_group_name  = "sg_rds"
+  engine_target         = "MariaDB"
+  engine_version_target = "10.4.13"
+  instance_gabarit      = "db.t2.micro"
+  sg_bdd                = module.SECURITY_GROUP_module.second_sg_id
+  storage_value         = 20
+  storage_max           = 50
+  port_define           = 3306
+  name_BDD              = "MyDatabase"
+  user                  = "userTest"
+  password              = "passwordTest"
+  third-subnet          = module.VPC_module.third-subnet_id
+  fourth-subnet         = module.VPC_module.fourth-subnet_id
 }

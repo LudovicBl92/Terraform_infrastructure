@@ -88,3 +88,20 @@ module "AUTOSCALING_module" {
   autoscaling_policy_name = "NAME OF THE AUTOSCALING POLICY "
   value_target            = "DESIRED VALUE TRIGGER"
 }
+
+module "RDS_module" {
+  source                = "./modules/RDS"
+  db_subnet_group_name  = "DB SUBNET GROUP NAME"
+  engine_target         = "ENGINE"
+  engine_version_target = "DESIRED VERSION"
+  instance_gabarit      = "INSTANCE TYPE"
+  sg_bdd                = module.SECURITY_GROUP_module.second_sg_id
+  storage_value         = "DESIRED STORAGE"
+  storage_max           = "DESIRED MAXIMUM STORAGE"
+  port_define           = "PORT""
+  name_BDD              = "BDD NAME"
+  user                  = "USER WANTED"
+  password              = "PASSWORD"
+  third-subnet          = module.VPC_module.third-subnet_id
+  fourth-subnet         = module.VPC_module.fourth-subnet_id
+}

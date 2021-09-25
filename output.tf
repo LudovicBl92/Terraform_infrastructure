@@ -11,6 +11,16 @@ output "second-subnet" {
   value       = module.VPC_module.second-subnet_name
 }
 
+output "third-subnet" {
+  description = "Subnet3_name"
+  value       = module.VPC_module.third-subnet_name
+}
+
+output "fourth-subnet" {
+  description = "Subnet4_name"
+  value       = module.VPC_module.fourth-subnet_name
+}
+
 output "first_sg_name" {
   description = "first_sg_name"
   value       = module.SECURITY_GROUP_module.first_sg_name
@@ -39,4 +49,19 @@ output "lb_name" {
 output "autoscaling_group_name" {
   description = "autoscaling_group_name"
   value       = module.AUTOSCALING_module.aws_autoscaling_group_name
+}
+
+output "name_BDD" {
+  description = "name_BDD"
+  value       = module.RDS_module.name_BDD
+}
+
+output "engine_target" {
+  description = "engine_target"
+  value       = module.RDS_module.engine_target
+}
+
+output "engine_version_target" {
+  description = "engine_version_target"
+  value       = module.RDS_module.engine_version_target
 }
