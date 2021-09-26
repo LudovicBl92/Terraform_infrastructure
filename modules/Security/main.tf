@@ -42,6 +42,18 @@ resource "aws_security_group_rule" "egress_rules_Pub" {
   security_group_id = aws_security_group.first_sg.id
 }
 
+resource "aws_security_group_rule" "egress_rules_Pub_to_Priv" {
+  count = length(var.egress_rules_Pub_to_Priv)
+
+  type              = "egress"
+  from_port         = var.egress_rules_Pub_to_Priv[count.index].from_port
+  to_port           = var.egress_rules_Pub_to_Priv[count.index].to_port
+  protocol          = var.egress_rules_Pub_to_Priv[count.index].protocol
+  cidr_blocks       = [var.cidr_block_subnet3, var.cidr_block_subnet4]
+  description       = var.egress_rules_Pub_to_Priv[count.index].description
+  security_group_id = aws_security_group.first_sg.id
+}
+
 resource "aws_security_group_rule" "ingress_rules_NAT" {
   count = length(var.ingress_rules_NAT)
 

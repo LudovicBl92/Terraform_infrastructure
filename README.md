@@ -48,6 +48,9 @@ module "SECURITY_GROUP_module" {
     primary-subnet     = module.VPC_module.primary-subnet_id
     second-subnet      = module.VPC_module.secondary-subnet_id
     cidr_block_subnet1 = module.VPC_module.cidr_block_subnet1
+    cidr_block_subnet2 = module.VPC_module.cidr_block_subnet2
+    cidr_block_subnet3 = module.VPC_module.cidr_block_subnet3
+    cidr_block_subnet4 = module.VPC_module.cidr_block_subnet4
 }
 
 module "EC2_module" {

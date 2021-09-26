@@ -33,6 +33,16 @@ variable "cidr_block_subnet2" {
   type        = string
 }
 
+variable "cidr_block_subnet3" {
+  description = "cidr_block_subnet3"
+  type        = string
+}
+
+variable "cidr_block_subnet4" {
+  description = "cidr_block_subnet4"
+  type        = string
+}
+
 variable "ingress_rules_Pub" {
   type = list(object({
     from_port   = number

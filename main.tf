@@ -29,6 +29,8 @@ module "SECURITY_GROUP_module" {
   second-subnet      = module.VPC_module.secondary-subnet_id
   cidr_block_subnet1 = module.VPC_module.cidr_block_subnet1
   cidr_block_subnet2 = module.VPC_module.cidr_block_subnet2
+  cidr_block_subnet3 = module.VPC_module.cidr_block_subnet3
+  cidr_block_subnet4 = module.VPC_module.cidr_block_subnet4
 }
 
 module "EC2_module" {
@@ -62,9 +64,9 @@ module "AUTOSCALING_module" {
   source                  = "./modules/AUTOSCALING"
   template_name           = module.EC2_module.template_name
   template_id             = module.EC2_module.template_id
-  minimum_size            = 2
+  minimum_size            = 1
   wanted_capacity         = 2
-  maximum_size            = 2
+  maximum_size            = 4
   healthcheck_period      = 120
   lb_arn                  = module.ALB_module.lb_arn
   second-subnet           = module.VPC_module.secondary-subnet_id
