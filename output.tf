@@ -48,7 +48,7 @@ output "lb_name" {
 
 output "autoscaling_group_name" {
   description = "autoscaling_group_name"
-  value       = module.AUTOSCALING_module.aws_autoscaling_group_name
+  value       = module.AUTOSCALING_module.autoscaling_name
 }
 
 output "name_BDD" {
@@ -64,4 +64,14 @@ output "engine_target" {
 output "engine_version_target" {
   description = "engine_version_target"
   value       = module.RDS_module.engine_version_target
+}
+
+output "lb_alarm_up" {
+  description = "lb_alarm_up"
+  value       = module.CLOUDWATCH_module.cloudwatch_alarm_up
+}
+
+output "lb_alarm_down" {
+  description = "lb_alarm_down"
+  value       = module.CLOUDWATCH_module.cloudwatch_alarm_down
 }

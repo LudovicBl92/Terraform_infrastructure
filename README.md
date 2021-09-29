@@ -24,6 +24,9 @@ This module provision aws autoscalingroup and associated policy.
 
 This module provision aws RDS database.
 
+# CLOUDWATCH creation
+
+This module provision aws Cloudwatch alarm.
 ## Usage
 
 ```hcl
@@ -111,4 +114,32 @@ module "RDS_module" {
   password              = "PASSWORD"
   third-subnet          = module.VPC_module.third-subnet_id
   fourth-subnet         = module.VPC_module.fourth-subnet_id
+}
+
+module "CLOUDWATCH_module" {
+  source                      = "./modules/CLOUDWATCH"
+  lb_name                     = module.AUTOSCALING_module.autoscaling_name
+  autoscaling_policy_name     = module.AUTOSCALING_module.autoscalingPolicy_name
+  lb_alarm_name_up            = "NAME OF ALARM UP"
+  lb_alarm_name_down          = "NAME ALARM DOWN"
+  lb_description_alarm        = "DESCRIPTION"
+  lb_metric_name              = "METRIC"
+  lb_period_evaluation        = "PERIOD EVALUATION"
+  lb_period                   = "PERIOD"
+  lb_comparison_operator_up   = "OPERATOR COMPARISON UP"
+  lb_comparison_operator_down = "OPERATOR COMPARISON DOWN"
+  lb_namespace                = "NAMESPACE"
+  lb_statistic                = "STATISCTIC"
+  lb_threshold_up             = "THRESHOLD FOR ALARM UP"
+  lb_threshold_down           = "THRESHOLD FOR ALARM DOWN"
+  BDD_id                      = module.RDS_module.BDD_id
+  rds_alarm_name              = "RDS ALARM NAME"
+  rds_description_alarm       = "DESCRIPTION"
+  rds_comparison_operator     = "RDS COMPARISON OPERATOR"
+  rds_period_evaluation       = "EVALUATION PERIOD FOR RDS"
+  rds_metric_name             = "METRIC NAME"
+  rds_namespace               = "NAMESPACE"
+  rds_period                  = "PERIOD"
+  rds_statistic               = "RDS STATISTIC"
+  rds_threshold               = "RDS THRESHOLD"
 }

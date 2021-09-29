@@ -1,5 +1,5 @@
-variable "template_name" {
-  description = "template_name"
+variable "autoscaling_name" {
+  description = "autoscaling_name"
   type        = string
 }
 
@@ -23,8 +23,8 @@ variable "maximum_size" {
   type        = number
 }
 
-variable "healthcheck_period" {
-  description = "healthcheck_period"
+variable "cooldown_value" {
+  description = "cooldown_value"
   type        = number
 }
 
@@ -55,5 +55,14 @@ variable "autoscaling_policy_name" {
 
 variable "value_target" {
   description = "value_target"
+  type        = string
+}
+
+variable "value_adjustement" {
+  description = "adjustment"
+  type        = string
+}
+variable "healthcheck_period" {
+  description = "healthcheck_period"
   type        = string
 }

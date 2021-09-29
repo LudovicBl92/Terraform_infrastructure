@@ -12,3 +12,8 @@ output "name_BDD" {
   description = "name_BDD"
   value       = aws_db_instance.BDD.name
 }
+
+output "BDD_id" {
+  description = "ID BDD"
+  value       = aws_db_instance.BDD.id
+}

@@ -1,5 +1,5 @@
 resource "aws_autoscaling_group" "autoScalingGroup" {
-  name                      = "${var.template_name}-asg"
+  name                      = var.autoscaling_name
   min_size                  = var.minimum_size
   desired_capacity          = var.wanted_capacity
   max_size                  = var.maximum_size
@@ -24,6 +24,15 @@ resource "aws_autoscaling_group" "autoScalingGroup" {
 }
 
 resource "aws_autoscaling_policy" "autoscalingPolicy" {
+  name = var.autoscaling_policy_name
+  scaling_adjustment = var.value_adjustement
+  adjustment_type = "ChangeInCapacity"
+  cooldown = var.cooldown_value
+  autoscaling_group_name = aws_autoscaling_group.autoScalingGroup.name
+}
+
+/*
+resource "aws_autoscaling_policy" "autoscalingPolicy" {
   name                   = var.autoscaling_policy_name
   policy_type            = "TargetTrackingScaling"
   autoscaling_group_name = aws_autoscaling_group.autoScalingGroup.name
@@ -36,3 +45,4 @@ resource "aws_autoscaling_policy" "autoscalingPolicy" {
     target_value = var.value_target
   }
 }
+*/

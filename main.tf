@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket = "bucketterraform"
+    key    = "terraform.tfstate"
+    region = "eu-west-3"
+  }
+}
+
 module "VPC_module" {
   source             = "./modules/VPC"
   cidr_block         = "10.0.0.0/16"
@@ -62,11 +70,12 @@ module "ALB_module" {
 
 module "AUTOSCALING_module" {
   source                  = "./modules/AUTOSCALING"
-  template_name           = module.EC2_module.template_name
+  autoscaling_name        = "Autoscaling_front_end"
   template_id             = module.EC2_module.template_id
   minimum_size            = 1
   wanted_capacity         = 2
   maximum_size            = 4
+  cooldown_value          = 300
   healthcheck_period      = 120
   lb_arn                  = module.ALB_module.lb_arn
   second-subnet           = module.VPC_module.secondary-subnet_id
@@ -74,6 +83,7 @@ module "AUTOSCALING_module" {
   tag_name                = "instance_ASG"
   autoscaling_policy_name = "Autoscaling-Policy"
   value_target            = 75
+  value_adjustement       = 1
 }
 
 module "RDS_module" {
@@ -91,4 +101,32 @@ module "RDS_module" {
   password              = "passwordTest"
   third-subnet          = module.VPC_module.third-subnet_id
   fourth-subnet         = module.VPC_module.fourth-subnet_id
+}
+
+module "CLOUDWATCH_module" {
+  source                      = "./modules/CLOUDWATCH"
+  lb_name                     = module.AUTOSCALING_module.autoscaling_name
+  autoscaling_policy_name     = module.AUTOSCALING_module.autoscalingPolicy_name
+  lb_alarm_name_up            = "CPU_using_up"
+  lb_alarm_name_down          = "CPU_using_down"
+  lb_description_alarm        = "Load Balancer CPU utilization"
+  lb_metric_name              = "CPUUtilization"
+  lb_period_evaluation        = 2
+  lb_period                   = 120
+  lb_comparison_operator_up   = "GreaterThanOrEqualToThreshold"
+  lb_comparison_operator_down = "LessThanOrEqualToThreshold"
+  lb_namespace                = "AWS/EC2"
+  lb_statistic                = "Average"
+  lb_threshold_up             = 80
+  lb_threshold_down           = 30
+  BDD_id                      = module.RDS_module.BDD_id
+  rds_alarm_name              = "free space disk"
+  rds_description_alarm       = "Database server free storage space"
+  rds_comparison_operator     = "LessThanOrEqualToThreshold"
+  rds_period_evaluation       = 1
+  rds_metric_name             = "FreeStorageSpace"
+  rds_namespace               = "AWS/RDS"
+  rds_period                  = "60"
+  rds_statistic               = "average"
+  rds_threshold               = 50000000
 }
