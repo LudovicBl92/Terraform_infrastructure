@@ -8,14 +8,21 @@ resource "aws_autoscaling_group" "autoScalingGroup" {
   target_group_arns         = [var.lb_arn]
 
   vpc_zone_identifier = [
-    var.second-subnet
+    var.primary-subnet,var.second-subnet
   ]
 
   launch_template {
     id      = var.template_id
     version = var.version_template
   }
-
+  
+  enabled_metrics = [
+    "GroupMinSize",
+    "GroupMaxSize",
+    "GroupDesiredCapacity",
+    "GroupInServiceInstances",
+    "GroupTotalInstances"
+  ]
   tag {
     key                 = "Name"
     value               = var.tag_name
@@ -23,26 +30,18 @@ resource "aws_autoscaling_group" "autoScalingGroup" {
   }
 }
 
-resource "aws_autoscaling_policy" "autoscalingPolicy" {
-  name = var.autoscaling_policy_name
-  scaling_adjustment = var.value_adjustement
+resource "aws_autoscaling_policy" "autoscalingPolicy_up" {
+  name = var.autoscaling_policy_up
+  scaling_adjustment = var.value_adjustement_up
   adjustment_type = "ChangeInCapacity"
   cooldown = var.cooldown_value
   autoscaling_group_name = aws_autoscaling_group.autoScalingGroup.name
 }
 
-/*
-resource "aws_autoscaling_policy" "autoscalingPolicy" {
-  name                   = var.autoscaling_policy_name
-  policy_type            = "TargetTrackingScaling"
+resource "aws_autoscaling_policy" "autoscalingPolicy_down" {
+  name = var.autoscaling_policy_down
+  scaling_adjustment = var.value_adjustement_down
+  adjustment_type = "ChangeInCapacity"
+  cooldown = var.cooldown_value
   autoscaling_group_name = aws_autoscaling_group.autoScalingGroup.name
-
-  target_tracking_configuration {
-    predefined_metric_specification {
-      predefined_metric_type = "ASGAverageCPUUtilization"
-    }
-
-    target_value = var.value_target
-  }
 }
-*/

@@ -72,18 +72,20 @@ module "AUTOSCALING_module" {
   source                  = "./modules/AUTOSCALING"
   autoscaling_name        = "Autoscaling_front_end"
   template_id             = module.EC2_module.template_id
-  minimum_size            = 1
-  wanted_capacity         = 2
+  minimum_size            = 0
+  wanted_capacity         = 0
   maximum_size            = 4
   cooldown_value          = 300
   healthcheck_period      = 120
   lb_arn                  = module.ALB_module.lb_arn
+  primary-subnet          = module.VPC_module.primary-subnet_id
   second-subnet           = module.VPC_module.secondary-subnet_id
   version_template        = "$Latest"
   tag_name                = "instance_ASG"
-  autoscaling_policy_name = "Autoscaling-Policy"
-  value_target            = 75
-  value_adjustement       = 1
+  autoscaling_policy_up   = "Autoscaling-Policy-up"
+  autoscaling_policy_down = "Autoscaling-Policy-down"
+  value_adjustement_up    = 1
+  value_adjustement_down  = -1
 }
 
 module "RDS_module" {
@@ -106,7 +108,8 @@ module "RDS_module" {
 module "CLOUDWATCH_module" {
   source                      = "./modules/CLOUDWATCH"
   lb_name                     = module.AUTOSCALING_module.autoscaling_name
-  autoscaling_policy_name     = module.AUTOSCALING_module.autoscalingPolicy_name
+  autoscaling_policy_up       = module.AUTOSCALING_module.autoscalingPolicy_up
+  autoscaling_policy_down     = module.AUTOSCALING_module.autoscalingPolicy_down
   lb_alarm_name_up            = "CPU_using_up"
   lb_alarm_name_down          = "CPU_using_down"
   lb_description_alarm        = "Load Balancer CPU utilization"
@@ -117,8 +120,8 @@ module "CLOUDWATCH_module" {
   lb_comparison_operator_down = "LessThanOrEqualToThreshold"
   lb_namespace                = "AWS/EC2"
   lb_statistic                = "Average"
-  lb_threshold_up             = 80
-  lb_threshold_down           = 30
+  lb_threshold_up             = 30
+  lb_threshold_down           = 10
   BDD_id                      = module.RDS_module.BDD_id
   rds_alarm_name              = "free space disk"
   rds_description_alarm       = "Database server free storage space"

@@ -1,5 +1,9 @@
-variable "autoscaling_policy_name" {
-  description = "autoscaling_policy_name"
+variable "autoscaling_policy_up" {
+  description = "autoscaling_policy_up"
+  type        = string
+}
+variable "autoscaling_policy_down" {
+  description = "autoscaling_policy_down"
   type        = string
 }
 variable "lb_alarm_name_down" {

@@ -33,6 +33,11 @@ variable "lb_arn" {
   type        = string
 }
 
+variable "primary-subnet" {
+  description = "primary-subnet"
+  type        = string
+}
+
 variable "second-subnet" {
   description = "second-subnet"
   type        = string
@@ -48,18 +53,23 @@ variable "tag_name" {
   type        = string
 }
 
-variable "autoscaling_policy_name" {
-  description = "autoscaling_policy_name"
+variable "autoscaling_policy_up" {
+  description = "autoscaling_policy_up"
   type        = string
 }
 
-variable "value_target" {
-  description = "value_target"
+variable "autoscaling_policy_down" {
+  description = "autoscaling_policy_down"
   type        = string
 }
 
-variable "value_adjustement" {
-  description = "adjustment"
+variable "value_adjustement_up" {
+  description = "adjustment up"
+  type        = string
+}
+
+variable "value_adjustement_down" {
+  description = "adjustment down"
   type        = string
 }
 variable "healthcheck_period" {

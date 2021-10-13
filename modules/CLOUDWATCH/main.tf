@@ -18,7 +18,7 @@ resource "aws_cloudwatch_metric_alarm" "web_cpu_alarm_up" {
   }
 
   alarm_description = "This metric monitor EC2 instance CPU utilization"
-  alarm_actions     = [var.autoscaling_policy_name]
+  alarm_actions     = [var.autoscaling_policy_up]
 }
 
 resource "aws_cloudwatch_metric_alarm" "web_cpu_alarm_down" {
@@ -36,5 +36,5 @@ resource "aws_cloudwatch_metric_alarm" "web_cpu_alarm_down" {
   }
 
   alarm_description = "This metric monitor EC2 instance CPU utilization"
-  alarm_actions     = [var.autoscaling_policy_name]
+  alarm_actions     = [var.autoscaling_policy_down]
 }
