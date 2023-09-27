@@ -1,3 +1,5 @@
+TEST
+
 This is the first directory where I use Terraform and its modules to provision resources.
 
 # AWS VPC creation
